@@ -12,7 +12,7 @@ class App:
         ctk.set_default_color_theme("blue")
 
         # Caminho absoluto do arquivo na pasta antes da pasta bin
-        self.caminho_arquivo = os.path.join(os.path.dirname(os.path.dirname(os.path.realpath(__file__))), NOME_ARQUIVO_CONFIG)
+        self.caminho_arquivo = os.path.join(os.path.dirname(os.path.realpath(__file__)), NOME_ARQUIVO_CONFIG)
         self.pasta_downloads = None
 
         self.app = ctk.CTk()
