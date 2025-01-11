@@ -45,7 +45,7 @@ def press_keys(*keys, duration=0.1):
 # -------------------------- Teste --------------------------
  
 
-
+pyautogui.moveTo(827, 352)
 
 
 
