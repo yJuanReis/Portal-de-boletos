@@ -56,15 +56,7 @@ if not exist "venv" (
 :: Ativa o ambiente virtual
 call venv\Scripts\activate
 
-:: Instala as dependências do projeto principal
-echo Instalando as dependências do projeto principal...
-pip install -r requirements.txt
-
-:: Instala as dependências adicionais (se necessário)
-if exist "..\Portal-de-boletos\requirements.txt" (
-    echo Instalando as dependências adicionais...
-    pip install -r ..\Portal-de-boletos\requirements.txt
-)
+pip install -r requirements.txt 
 
 echo Processo concluído com sucesso!
 exit
