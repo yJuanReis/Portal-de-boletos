@@ -1,4 +1,4 @@
 @echo off
 cd /d "%~dp0"
-python "all_in_one.py"
+python "automacao-portal-de-boletos.py"
 exit
