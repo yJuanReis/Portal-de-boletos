@@ -14,4 +14,7 @@ call venv\Scripts\activate
 REM Instalar as dependências do projeto
 pip install -r requirements.txt
 
+REM Instalar as dependências do projeto 2
+pip install -r ../Portal-de-boletos/requirements.txt
+
 exit
