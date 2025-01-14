@@ -330,10 +330,9 @@ if elemento_acessar:
 else:
     print("Botão 'Acessar' não encontrado!")
 
-
-# Até aqui ta Ok
-
 time.sleep(1)
+
+
 
 
 def conectar_email(usuario_portal, senha_portal):
@@ -538,8 +537,6 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-
-
 # -------------------------- Gloria --------------------------------
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
@@ -566,8 +563,6 @@ time.sleep(tempo)
 move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
-
-# --------------------------------------------------------------------
 
 # -------------------------- Itacuruça --------------------------
 # Etapa 1: Seleciona a Unidade de negocio
@@ -596,10 +591,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
 # -------------------------- Piratas --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -626,10 +618,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
 # -------------------------- Porto Bracuhy ---------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -656,10 +645,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
 # -------------------------- Refugio de Paraty --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -686,10 +672,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
 # -------------------------- Ribeira --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -716,10 +699,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
 # -------------------------- Buzios --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -746,10 +726,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
 # -------------------------- Estacinamento --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -776,11 +753,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
-
 # -------------------------- JL Bracuhy --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -807,11 +780,7 @@ move_and_click(900, 583)       # Move e clica no botão Fechar final
 time.sleep(fast)
 pyautogui.hotkey('tab', 'enter')  # Atalho para finalizar
 
-# --------------------------------------------------------------------
-
-
 # -------------------------- Boa Vista --------------------------
-
 # Etapa 1: Seleciona a Unidade de negocio
 move_and_click(900, 390)  # Clica no centro da tela
 time.sleep(fast)
@@ -860,10 +829,10 @@ def limpar_pasta(caminho_pasta):
     """
     try:
         for arquivo in os.listdir(caminho_pasta):
-            caminho_arquivo = os.path.join(caminho_pasta, arquivo)
-            if os.path.isfile(caminho_arquivo):
-                os.remove(caminho_arquivo)
-                print(f"Arquivo removido: {caminho_arquivo}")
+            caminho_pasta = os.path.join(caminho_pasta, arquivo)
+            if os.path.isfile(caminho_pasta):
+                os.remove(caminho_pasta)
+                print(f"Arquivo removido: {caminho_pasta}")
         print("Pasta limpa com sucesso.")
     except Exception as e:
         print(f"Erro ao limpar a pasta: {e}")
@@ -872,10 +841,10 @@ def obter_caminho_pasta(nome_arquivo):
     try:
         # Obtém o diretório onde o script está localizado
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        caminho_arquivo = os.path.join(script_dir, nome_arquivo)
+        caminho_pasta = os.path.join(script_dir, nome_arquivo)
 
         # Abre o arquivo no diretório do script
-        with open(caminho_arquivo, 'r', encoding='utf-8') as arquivo:
+        with open(caminho_pasta, 'r', encoding='utf-8') as arquivo:
             linhas = arquivo.readlines()
             if len(linhas) >= 5:
                 return linhas[4].strip()
@@ -954,14 +923,14 @@ def carregar_credenciais(nome_arquivo):
     try:
         # Obtém o diretório do script atual
         script_dir = os.path.dirname(os.path.abspath(__file__))
-        caminho_arquivo = os.path.join(script_dir, nome_arquivo)
+        caminho_pasta = os.path.join(script_dir, nome_arquivo)
 
         # Verifica se o arquivo existe
-        if not os.path.exists(caminho_arquivo):
+        if not os.path.exists(caminho_pasta):
             raise FileNotFoundError(f"O arquivo {nome_arquivo} não foi encontrado no diretório do script.")
 
         # Lê o arquivo e carrega as credenciais
-        with open(caminho_arquivo, "r", encoding="utf-8") as arquivo:
+        with open(caminho_pasta, "r", encoding="utf-8") as arquivo:
             linhas = arquivo.readlines()
             if len(linhas) < 2:
                 raise ValueError("O arquivo deve conter pelo menos 2 linhas: e-mail na primeira linha e senha na segunda.")
@@ -976,8 +945,8 @@ def carregar_credenciais(nome_arquivo):
         print(f"Erro ao carregar credenciais do arquivo {nome_arquivo}: {e}")
         return None, None
 # Configurações do script
-caminho_arquivo = "login_imap.txt"
-usuario_portal, senha_portal = carregar_credenciais(caminho_arquivo)
+caminho_pasta = "login_imap.txt"
+usuario_portal, senha_portal = carregar_credenciais(caminho_pasta)
 if not usuario_portal or not senha_portal:
     print("Erro ao carregar credenciais. Encerrando...")
 else:
@@ -1055,7 +1024,7 @@ except locale.Error as e:
     print(f"Erro ao configurar o locale: {e}")
 
 # 5m para começar a importação do Usuarios
-time.sleep(300)
+time.sleep(600)
 ############################################################################################################
 ################################# Automação De Unidades usuarios pagadores #################################
 ############################################################################################################
@@ -1426,7 +1395,6 @@ time.sleep(delay)
 pyautogui.hotkey('tab', 'enter')
 
 # -------------------------- Boa vista --------------------------
-
 pyautogui.moveTo(900, 390)
 pyautogui.click()
 time.sleep(fast)
@@ -1469,10 +1437,10 @@ def limpar_pasta(caminho_pasta):
     """
     try:
         for arquivo in os.listdir(caminho_pasta):
-            caminho_arquivo = os.path.join(caminho_pasta, arquivo)
-            if os.path.isfile(caminho_arquivo):
-                os.remove(caminho_arquivo)
-                print(f"Arquivo removido: {caminho_arquivo}")
+            caminho_pasta = os.path.join(caminho_pasta, arquivo)
+            if os.path.isfile(caminho_pasta):
+                os.remove(caminho_pasta)
+                print(f"Arquivo removido: {caminho_pasta}")
         print("Pasta limpa com sucesso.")
     except Exception as e:
         print(f"Erro ao limpar a pasta: {e}")
