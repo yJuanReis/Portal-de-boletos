@@ -1,0 +1,217 @@
+
+#####################################################################################
+#####################################################################################
+#####################################################################################
+# -------------------------- Usuarios_pagadores.csv ---------------------------------
+
+def limpar_pasta(caminho_pasta):
+    """
+    Remove todos os arquivos da pasta especificada.
+    :param caminho_pasta: str - Caminho da pasta a ser limpa
+    """
+    try:
+        for arquivo in os.listdir(caminho_pasta):
+            nome_arquivo = os.path.join(caminho_pasta, arquivo)
+            if os.path.isfile(nome_arquivo):
+                os.remove(nome_arquivo)
+                print(f"Arquivo removido: {nome_arquivo}")
+        print("Pasta limpa com sucesso.")
+    except Exception as e:
+        print(f"Erro ao limpar a pasta: {e}")
+def obter_caminho_pasta(nome_arquivo):
+    """Obtém o caminho da pasta especificada na linha 5 do arquivo."""
+    try:
+        # Obtém o diretório onde o script está localizado
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        nome_arquivo = os.path.join(script_dir, nome_arquivo)
+
+        # Abre o arquivo no diretório do script
+        with open(nome_arquivo, 'r', encoding='utf-8') as arquivo:
+            linhas = arquivo.readlines()
+            if len(linhas) >= 5:
+                return linhas[4].strip()
+            else:
+                raise ValueError("O arquivo não contém 5 linhas.")
+    except Exception as e:
+        print(f"Erro ao ler o arquivo {nome_arquivo}: {e}")
+        return None
+# Uso da função
+caminho_pasta = obter_caminho_pasta("login_imap.txt")
+# Verifica se o caminho foi obtido com sucesso e limpa a pasta
+if caminho_pasta:
+    limpar_pasta(caminho_pasta)
+else:
+    print("Erro ao obter o caminho da pasta. Verifique o arquivo de configuração.")
+# Função para decodificar o nome do arquivo
+def decodificar_nome_arquivo(nome_arquivo):
+    """Decodifica o nome do arquivo, caso ele esteja codificado."""
+    if nome_arquivo:
+        partes = decode_header(nome_arquivo)
+        nome_decodificado = ''.join(
+            parte.decode(encoding or 'utf-8') if isinstance(parte, bytes) else parte 
+            for parte, encoding in partes
+        )
+        return nome_decodificado
+    return None
+# Função para buscar e baixar um anexo específico por e-mail
+def baixar_anexo_por_email(usuario_portal, senha_portal, nome_arquivo_procurado, pasta_destino):
+    """Busca e baixa um anexo específico de um e-mail."""
+    try:
+        # Conectar ao servidor IMAP
+        servidor = imaplib.IMAP4_SSL("imap.gmail.com")
+        servidor.login(usuario_portal, senha_portal)
+        servidor.select("inbox")  # Seleciona a caixa de entrada
+
+        # Buscar mensagens na caixa de entrada
+        status, mensagens = servidor.search(None, "ALL")
+        if status != "OK":
+            print("Erro ao buscar mensagens.")
+            return False
+
+        ids_mensagens = mensagens[0].split()
+
+        # Iterar sobre os IDs das mensagens (do mais recente ao mais antigo)
+        for id_mensagem in reversed(ids_mensagens):
+            status, msg_data = servidor.fetch(id_mensagem, "(RFC822)")
+            if status != "OK":
+                continue
+
+            for resposta in msg_data:
+                if isinstance(resposta, tuple):
+                    msg = email.message_from_bytes(resposta[1])
+                    # Verificar anexos na mensagem
+                    if msg.is_multipart():
+                        for parte in msg.walk():
+                            if parte.get_content_disposition() == "attachment":
+                                nome_arquivo = decodificar_nome_arquivo(parte.get_filename())
+                                if nome_arquivo == nome_arquivo_procurado:
+                                    caminho_completo = os.path.join(pasta_destino, nome_arquivo)
+                                    with open(caminho_completo, "wb") as f:
+                                        f.write(parte.get_payload(decode=True))
+                                    print(f"Anexo salvo: {caminho_completo}")
+                                    servidor.logout()
+                                    return True
+
+        print("Nenhum anexo encontrado com o nome especificado.")
+        servidor.logout()
+        return False
+
+    except Exception as e:
+        print(f"Erro ao acessar o e-mail: {e}")
+        return False
+     
+# Função para carregar credenciais do arquivo login_imap.txt
+def carregar_credenciais(nome_arquivo):
+    """Carrega as credenciais de e-mail do arquivo especificado."""
+    try:
+        # Obtém o diretório do script atual
+        script_dir = os.path.dirname(os.path.abspath(__file__))
+        nome_arquivo = os.path.join(script_dir, nome_arquivo)
+
+        # Verifica se o arquivo existe
+        if not os.path.exists(nome_arquivo):
+            raise FileNotFoundError(f"O arquivo {nome_arquivo} não foi encontrado no diretório do script.")
+
+        # Lê o arquivo e carrega as credenciais
+        with open(nome_arquivo, "r", encoding="utf-8") as arquivo:
+            linhas = arquivo.readlines()
+            if len(linhas) < 2:
+                raise ValueError("O arquivo deve conter pelo menos 2 linhas: e-mail na primeira linha e senha na segunda.")
+            
+            usuario_portal = linhas[0].strip()  # Primeira linha: e-mail
+            senha_portal = linhas[1].strip()   # Segunda linha: senha
+
+            print("Credenciais carregadas com sucesso.")
+            return usuario_portal, senha_portal
+
+    except Exception as e:
+        print(f"Erro ao carregar credenciais do arquivo {nome_arquivo}: {e}")
+        return None, None
+    
+# Configurações do script
+nome_arquivo = "login_imap.txt"
+usuario_portal, senha_portal = carregar_credenciais(nome_arquivo)
+if not usuario_portal or not senha_portal:
+    print("Erro ao carregar credenciais. Encerrando...")
+else:
+    nome_arquivo_procurado = "usuarios_pagadores.csv"
+    pasta_destino = os.path.expanduser("~/Downloads")  # Altere conforme necessário
+
+    # Executar a função para baixar o anexo
+    print("Buscando e baixando o anexo...")
+    sucesso = baixar_anexo_por_email(usuario_portal, senha_portal, nome_arquivo_procurado, pasta_destino)
+    if sucesso:
+        print("Anexo baixado com sucesso!")
+    else:
+        print("Falha ao baixar o anexo.")
+
+    # Função para extrair um código numérico de 6 dígitos do texto fornecido
+    def extrair_codigo(texto):
+        """Extrai um código numérico de 6 dígitos do texto fornecido."""
+        padrao = r"\b\d{6}\b"
+        match = re.search(padrao, texto)
+        return match.group(0) if match else None
+# Função para conectar ao servidor de e-mail
+def conectar_email(usuario_portal, senha_portal):
+    """Conecta ao servidor de e-mail IMAP e retorna a conexão."""
+    try:
+        servidor = imaplib.IMAP4_SSL("imap.gmail.com")
+        servidor.login(usuario_portal, senha_portal)
+        return servidor
+    except Exception as e:
+        print(f"Erro ao conectar ao servidor de e-mail: {e}")
+        return None
+# Função para buscar o código de confirmação no e-mail
+def buscar_codigo_6(servidor, remetente_filtro):
+    """Busca o código de confirmação no e-mail do remetente especificado."""
+    try:
+        servidor.select("inbox")
+        status, mensagens = servidor.search(None, f'(FROM "{remetente_filtro}")')
+        if status != "OK":
+            print("Erro ao buscar mensagens.")
+            return None
+
+        ids_mensagens = mensagens[0].split()
+        for id_mensagem in reversed(ids_mensagens):
+            status, msg_data = servidor.fetch(id_mensagem, "(RFC822)")
+            if status != "OK":
+                continue
+
+            for resposta in msg_data:
+                if isinstance(resposta, tuple):
+                    msg = email.message_from_bytes(resposta[1])
+                    if msg.is_multipart():
+                        for parte in msg.walk():
+                            if parte.get_content_type() == "text/plain":
+                                conteudo = parte.get_payload(decode=True).decode()
+                                codigo = extrair_codigo(conteudo)
+                                if codigo:
+                                    return codigo
+        return None
+    except Exception as e:
+        print(f"Erro ao buscar o código de confirmação: {e}")
+        return None
+def preencher_campo_xpath(navegador, xpath_campo, valor):
+    """Preenche um campo no navegador identificado pelo XPath."""
+    try:
+        campo = WebDriverWait(navegador, 5).until(  # Increased wait time from 5 to 10 seconds
+        )
+        campo.send_keys(valor)
+    except Exception as e:
+        print(f"Erro ao preencher o campo: {e}")
+# Configurações de ambiente
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+sys.stdout.reconfigure(encoding='utf-8')  # Configura saída padrão para UTF-8
+try:
+    locale.setlocale(locale.LC_ALL, 'pt_BR.UTF-8')  # Configura o locale para português do Brasil
+except locale.Error as e:
+    print(f"Erro ao configurar o locale: {e}")
+
+# 5m para começar a importação do Usuarios
+
+# time.sleep(600)
+
+
+############################################################################################################
+################################# Automação De Unidades usuarios pagadores #################################
+############################################################################################################
