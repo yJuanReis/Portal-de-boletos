@@ -241,16 +241,19 @@ class AutomacaoPortal:
             time.sleep(TEMPOS['fast'])
             print("  ✓ Clique no meio da tela realizado")
 
-            # Sequência: TAB > seta pra baixo > TAB > seta pra baixo > tab > tab > enter
-            print("  → Executando sequência de teclas...")
+            # Seleção da Unidade de Negócios
+            print("  → Verolme...")
             sequencia_teclas = [
-                ('tab', 'Tab'),
-                ('down', 'Seta para baixo'),
-                ('tab', 'Tab'),
-                ('down', 'Seta para baixo'),
-                ('tab', 'Tab'),
-                ('tab', 'Tab'),
-                ('enter', 'Enter')
+                ('tab'),
+                ('down'), #Verolme
+
+                ('tab') #Pagador
+                ('down'),
+
+
+                ('tab'), #Upload
+                ('tab'),
+                ('enter')
             ]
 
             for tecla, descricao in sequencia_teclas:
@@ -264,6 +267,52 @@ class AutomacaoPortal:
             pyautogui.hotkey('ctrl', 'l')
             time.sleep(TEMPOS['fast'])
             print("  ✓ Ctrl + L executado")
+
+            # Digitar o caminho do arquivo
+            print("  → Digitando caminho do arquivo...")
+            caminho = self.credenciais['caminho_pasta']
+            pyautogui.write(caminho)
+            time.sleep(TEMPOS['fast'])
+
+            # Sequência de teclas após digitar o caminho
+            print("  → Executando sequência de teclas após caminho...")
+            pyautogui.press('enter')
+            time.sleep(TEMPOS['fast'])
+            
+            print("  → Pressionando TAB 5 vezes com intervalo de 0.5 segundos...")
+            for _ in range(5):
+                pyautogui.press('tab')
+                time.sleep(0.5)  # Aumentado para meio segundo
+            print("  ✓ Sequência de TABs concluída")
+            
+            pyautogui.press('down')
+            time.sleep(TEMPOS['fast'])
+            pyautogui.press('enter')
+            print("  ✓ Sequência de teclas executada com sucesso")
+
+            # Clicando no botão de enviar
+            print("  → Clicando em importar...")
+            botao_enviar = self.esperar_elemento('//*[@id="enviar_frm_upload"]')
+            if botao_enviar:
+                botao_enviar.click()
+                time.sleep(TEMPOS['wait'])  # Aumentado para 2 segundos
+                print("  ✓ Botão de enviar clicado")
+
+            # Clicando no botão OK
+            print("  → Clicando no botão OK...")
+            botao_ok = self.esperar_elemento('/html/body/div[5]/div/div[2]/div[3]/input[2]')
+            if botao_ok:
+                botao_ok.click()
+                time.sleep(TEMPOS['wait'])  # Aumentado para 2 segundos
+                print("  ✓ Botão OK clicado")
+
+            # Clicando no botão Fechar
+            print("  → Clicando no botão Fechar...")
+            botao_fechar = self.esperar_elemento('/html/body/div[5]/div/div[2]/div[3]/input')
+            if botao_fechar:
+                botao_fechar.click()
+                time.sleep(TEMPOS['wait'])  # Aumentado para 2 segundos
+                print("  ✓ Botão Fechar clicado")
 
             print("  ✓ Sequência de ações completada com sucesso")
 
